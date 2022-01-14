@@ -1,0 +1,23 @@
+{
+  "name": "Searchsen",
+  "description": "Search the chat of Twitch VODs",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Searchsen",
+    "default_icon": "icon.png"
+  },
+  "permissions": ["tabs"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.twitch.tv/*","https://www.twitch.tv/videos/*"],
+      "js": ["contentScript.js"]
+    }
+  ]
+}
