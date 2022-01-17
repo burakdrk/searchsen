@@ -1,4 +1,4 @@
-# Searchsen
+# <img src="https://cdn.7tv.app/emote/61d74d1e27a4f6d6544dbafa/1x"/> Searchsen
 
 An extension created with React and TypeScript that allows you to search the chat of Twitch VODs.
 
