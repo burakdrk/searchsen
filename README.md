@@ -20,6 +20,6 @@ An extension created with React and TypeScript that allows you to search the cha
 
 ## Future Updates
 
-- <s>Will add search by username functionality.</s> Added with 1.1
-- Will add emote support.
-- Will add Firefox support.
+- <s>Search by username.</s> Added with 1.1
+- Emote support.
+- Firefox support.
