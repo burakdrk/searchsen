@@ -15,6 +15,7 @@ An extension created with React and TypeScript that allows you to search the cha
 
 ## Limitations
 
+- Only works with channels supported by https://logs.ivr.fi/
 - It might not work very well with VODs that are over 24hrs long.
 - <s>The messages might not get wrapped around if they are too long. Will be fixed in upcoming releases.</s> Fixed with 1.1
 
