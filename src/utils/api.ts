@@ -89,6 +89,7 @@ export const getChatLogs = async (creation: string, duration: number, username: 
       if(f>=startEpoch && f<=endEpoch)  {
         toRet.push({
           'epoch': f,
+          'inSecs': inSecs(f-startEpoch),
           'intoVod': epochDifference(f-startEpoch),
           'user': c[3],
           'message': e
@@ -133,10 +134,15 @@ const epochDifference = (diff: number): string => {
   return `?t=${differenceDate.getUTCHours()}h${differenceDate.getUTCMinutes()}m${differenceDate.getUTCSeconds()}s`
 }
 
+const inSecs = (diff: number): number => {
+  const differenceDate = new Date(diff)
+  const hrs = differenceDate.getUTCHours()
+  const mins = differenceDate.getUTCMinutes()
+  const secs = differenceDate.getUTCSeconds()
+  return (hrs) * 60 * 60 + (mins) * 60 + (secs)
+}
+
 const zeroOrNot = (time: number): string => {
-  if(time < 10) {
-    return '0'
-  }else {
-    return ''
-  }
+  if(time < 10) return '0'
+  return ''
 }
