@@ -79,7 +79,6 @@ const Icon = () => {
       if(typeof ret.video_id !== 'undefined') {
           setLoading(true)
           setTextLabel('Fetching...')
-          console.log(ret.api_token)
           getVODInfo(ret)
           .then((data) => {
           if(typeof data !== 'undefined') {
@@ -133,10 +132,10 @@ const Icon = () => {
     }
 
     const anan = () => {
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'secondary'
-      }else {
+      if ($('html').hasClass('tw-root--theme-light')) {
         return 'primary'
+      }else {
+        return 'secondary'
       }
     }
 
