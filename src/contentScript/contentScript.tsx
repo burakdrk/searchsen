@@ -82,10 +82,10 @@ const Icon = () => {
           getVODInfo(ret)
           .then((data) => {
           if(typeof data !== 'undefined') {
-              checkChannel(data.channel.name)
+              checkChannel(data.channelname)
               .then((doto)=>{
-              if(doto.channels.some(e => e.name === data.channel.name)) {
-                  getChatLogs(data.created_at, data.length, data.channel.name)
+              if(doto.channels.some(e => e.name === data.channelname)) {
+                  getChatLogs(data.created_at, data.length, data.channelname)
                   .then((dota)=>{
                   datum = dota
                   setTextLabel('Input')
@@ -217,8 +217,6 @@ export const getTwitchTokens = () => {
   const temp = document.cookie
   return {
       video_id: /twitch\.tv\/videos\/(\d+)/.exec(window.location.href)?.[1],
-      api_token: /(?<=api_token\=).+?(?=;)/.exec(temp)?.[0], 
-      device_id: /(?<=unique_id\=).+?(?=;)/.exec(temp)?.[0],
       oauth: /(?<=%22authToken%22:%22).+?(?=%22)/.exec(temp)?.[0] ? 'OAuth ' + /(?<=%22authToken%22:%22).+?(?=%22)/.exec(temp)?.[0] : '',
       client_id: /(?<="Client-ID":"|clientId=").+?(?=")/.exec(Array.from(document.getElementsByTagName('script'))?.filter(i=> /(?<="Client-ID":"|clientId=").+?(?=")/.test(i.innerHTML))?.[0].innerHTML)?.[0]
   }

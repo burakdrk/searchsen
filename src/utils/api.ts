@@ -2,26 +2,24 @@ import moment from 'moment'
 import eol from 'eol'
 
 export const getVODInfo = async (params): Promise<any> => {
-  const {video_id, oauth, client_id, api_token, device_id} = params
-  const res = await fetch(`https://api.twitch.tv/v5/videos/${video_id}/`, {
-    'method': 'GET',
+  const {video_id, oauth, client_id} = params
+  const res = await fetch(`https://gql.twitch.tv/gql`, {
+    'method': 'POST',
     'headers': {
-      'accept': 'application/vnd.twitchtv.v5+json; charset=UTF-8',
       'authorization': oauth,
       'client-id': client_id,
-      'content-type': 'application/json; charset=UTF-8',
-      'twitch-api-token': api_token,
-      'x-device-id': device_id,
-      'x-requested-with': 'XMLHttpRequest'
-    }
+    },
+    body: JSON.stringify({
+      query: `query {video(id: ${video_id}){createdAt lengthSeconds creator {login}}}`
+    })
   })
-
+  
   if(!res.ok) {
       throw new Error('Error retrieving VOD Info')
   }
 
-  const data = await res.json()
-  return data
+  const data = await res.json();
+  return {channelname: data.data.video.creator.login, created_at: data.data.video.createdAt, length: data.data.video.lengthSeconds};
 }
 
 export const checkChannel = async (username: string): Promise<any> => {
