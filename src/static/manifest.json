@@ -1,7 +1,7 @@
 {
   "name": "Searchsen",
   "description": "Search the chat of Twitch VODs",
-  "version": "2.0.2",
+  "version": "3.0.0",
   "manifest_version": 3,
   "icons": {
     "16": "icon.png",
@@ -9,7 +9,6 @@
     "128": "icon.png"
   },
   "action": {
-    "default_popup": "popup.html",
     "default_title": "Searchsen",
     "default_icon": "icon.png"
   },

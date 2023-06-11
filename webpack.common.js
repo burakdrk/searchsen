@@ -5,7 +5,6 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   entry: {
-    popup: path.resolve('src/popup/popup.tsx'),
     contentScript: path.resolve('src/contentScript/contentScript.tsx'),
   },
   module: {
@@ -39,10 +38,7 @@ module.exports = {
           to: path.resolve('dist'),
         }
       ]
-    }),
-    ...getHtmlPlugins([
-      'popup',
-    ]),
+    })
   ],
   output: {
     filename: '[name].js',
@@ -55,12 +51,4 @@ module.exports = {
       }
     },
   }
-}
-
-function getHtmlPlugins(chunks) {
-  return chunks.map(chunk => new HtmlPlugin({
-    title: 'Searchsen',
-    filename: `${chunk}.html`,
-    chunks: [chunk],
-  }))
 }
