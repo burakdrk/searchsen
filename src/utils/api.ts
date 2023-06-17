@@ -19,10 +19,6 @@ export const getVODInfo = async ({video_id, oauth, client_id}): Promise<any> => 
     return {channelname: data.data.video.creator.login, created_at: data.data.video.createdAt, length: data.data.video.lengthSeconds};
 }
 
-export const getChatLogsFromTwitch = async (creation: string, duration: number, username: string, setTextLabel: Function): Promise<any> => {
-    console.log('oh!');
-}
-
 export const checkChannel = async (): Promise<any> => {
     const res = await fetch('https://logs.ivr.fi/channels', {
         'method': 'GET',
@@ -135,7 +131,6 @@ export const getChatLogs = async (creation: string, duration: number, username: 
 
             if(f>=startEpoch && f<=endEpoch) {
                 toRet.push({
-                    'epoch': f,
                     'inSecs': inSecs,
                     'intoVod': strDifference(inSecs),
                     'user': c[3],
@@ -179,7 +174,7 @@ export const returnSearchedArray = (origArr: Array<Object|any>, pattern: string,
     return indexArray;
 }
 
-const strDifference = (secs): string => {
+export const strDifference = (secs): string => {
     const h = Math.floor(secs / 3600);
     secs %= 3600;
     const m = Math.floor(secs / 60);

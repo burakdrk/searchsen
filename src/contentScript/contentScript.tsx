@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import { getVODInfo, getChatLogs, returnSearchedArray, checkChannel, getChatLogsFromTwitch } from '../utils/api';
+import { getVODInfo, getChatLogs, returnSearchedArray, checkChannel, strDifference } from '../utils/api';
 import { Virtuoso } from 'react-virtuoso';
 import Switch from "react-switch";
 import './contentScript.css';
@@ -33,6 +33,7 @@ const Icon = () => {
         setTextVal('');
         setIsInValid(true);
         setRunText(true);
+        logArr = [];
 
         if(typeof ret.video_id !== 'undefined') {
             setLoading(true);
@@ -45,15 +46,89 @@ const Icon = () => {
 
                 if(ch.channels.some(e => e.name === data.channelname)) {
                     logArr = await getChatLogs(data.created_at, data.length, data.channelname, setTextLabel);
-                    setTextLabel('Input');
                     setLoading(false);
                     setRunText(false);
                 }
                 else {
-                    await getChatLogsFromTwitch(data.created_at, data.length, data.channelname, setTextLabel);
+                    let temp: any = await chrome.runtime.sendMessage({command: 'get_logs_from_twitch', data: {params: ret, offset: 0, cursor: null}});
+                    if (temp.status === 'error') {
+                        setTextLabel('Error retrieving logs. Try again later.');
+                        setLoading(false);
+                        return;
+                    }
+
+                    try {
+                        temp.data[0].data.video.comments.edges.forEach(e => {
+                            if(e.node.commenter == null) return;
+
+                            logArr.push({
+                                'inSecs': e.node.contentOffsetSeconds,
+                                'intoVod': strDifference(e.node.contentOffsetSeconds),
+                                'user': e.node.commenter.login,
+                                'message': e.node.message.fragments[0].text,
+                                'userColor': e.node.message.userColor 
+                            });
+                        });
+                    } catch(e) {
+                        console.error(e);
+                        setLoading(false);
+                        setTextLabel('Failed.');
+                        return;
+                    }
+                    
+                    setTextLabel('Fetching... ' + Math.round((logArr.at(-1).inSecs * 100) / data.length) + '%');
+
+                    let cursor = null;
+                    if (temp.data[0].data.video.comments.pageInfo.hasNextPage) {
+                        cursor = temp.data[0].data.video.comments.edges.at(-1).cursor;
+                    }
+
+                    while (true) {
+                        temp = await chrome.runtime.sendMessage({command: 'get_logs_from_twitch', data: {params: ret, offset: null, cursor: cursor}});
+                        if (temp.status === 'error') {
+                            setTextLabel('Error retrieving logs. Try again later.');
+                            setLoading(false);
+                            return;
+                        }
+                        
+                        try {
+                            temp.data[0].data.video.comments.edges.forEach(e => {
+                                if(e.node.commenter == null) return;
+
+                                logArr.push({
+                                    'inSecs': e.node.contentOffsetSeconds,
+                                    'intoVod': strDifference(e.node.contentOffsetSeconds),
+                                    'user': e.node.commenter.login,
+                                    'message': e.node.message.fragments[0].text,
+                                    'userColor': e.node.message.userColor 
+                                });
+                            });
+                        } catch(e) {
+                            console.error(e);
+                            setLoading(false);
+                            setTextLabel('Failed.');
+                            setRunText(false);
+                            return;
+                        }
+
+                        setTextLabel('Fetching... ' + Math.round((logArr.at(-1).inSecs * 100) / data.length) + '%');
+
+                        if (temp.data[0].data.video.comments.pageInfo.hasNextPage) {
+                            cursor = temp.data[0].data.video.comments.edges.at(-1).cursor;
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                    
+                    setTextLabel('Done.');
                     setLoading(false);
-                    setTextLabel('Channel is not supported');
+                    setRunText(false);
                 }
+            }
+            else {
+                setLoading(false);
+                setTextLabel('Could not retrieve VOD info. Try again later.');
             }
         }
         else {
@@ -179,7 +254,8 @@ const getTwitchTokens = () => {
     return {
         video_id: /twitch\.tv\/videos\/(\d+)/.exec(window.location.href)?.[1],
         oauth: /(?<=%22authToken%22:%22).+?(?=%22)/.exec(temp)?.[0] ? 'OAuth ' + /(?<=%22authToken%22:%22).+?(?=%22)/.exec(temp)?.[0] : '',
-        client_id: /(?<="Client-ID":"|clientId=").+?(?=")/.exec(Array.from(document.getElementsByTagName('script'))?.filter(i=> /(?<="Client-ID":"|clientId=").+?(?=")/.test(i.innerHTML))?.[0].innerHTML)?.[0]
+        client_id: /(?<="Client-ID":"|clientId=").+?(?=")/.exec(Array.from(document.getElementsByTagName('script'))?.filter(i=> /(?<="Client-ID":"|clientId=").+?(?=")/.test(i.innerHTML))?.[0].innerHTML)?.[0],
+        unique_id: temp.match('(^|;)\\s*' + 'unique_id' + '\\s*=\\s*([^;]+)')?.pop() || '',
     }
 }
 
