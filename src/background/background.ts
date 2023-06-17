@@ -49,7 +49,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
                     if((Object.keys(data).length === 0) || (data.integrity !== token)) {
                         // @ts-ignore
                         chrome.storage.local.set({ integrity: token }).then(() => {
-                            console.log("Token is set");
+                            console.log("Token is set: "+token);
                         });
                     }  
                 });
@@ -58,4 +58,9 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
     },
     {urls: [ "https://gql.twitch.tv/gql" ]},
     ['requestHeaders']);
-  
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (changeInfo.url) {
+        chrome.tabs.sendMessage(tabId, {message: 'fugg'});
+    }
+}); 

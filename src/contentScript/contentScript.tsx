@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { getVODInfo, getChatLogs, returnSearchedArray, checkChannel, strDifference } from '../utils/api';
 import { Virtuoso } from 'react-virtuoso';
@@ -9,6 +9,7 @@ import Draggable from 'react-draggable';
 
 let logArr = [];
 let vodId: string = '';
+let isLoading = false;
 
 const Icon = () => {
     const [isInValid, setIsInValid] = useState<boolean>(true);
@@ -23,6 +24,19 @@ const Icon = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
+    useEffect(() => {
+        function handleURLChangeWhenLoading(request, sender, sendResponse) {
+            if(isLoading) {
+                isLoading = false;
+                vodId = '';
+                setLoading(false);
+                setTextLabel('You left the VOD. Download cancelled.');
+            }
+        }
+
+        chrome.runtime.onMessage.addListener(handleURLChangeWhenLoading);
+    }, []);
+
     const initate = async () => {
         let ret = getTwitchTokens();
 
@@ -32,11 +46,14 @@ const Icon = () => {
         setResultArray([]);
         setTextVal('');
         setIsInValid(true);
+        setTextLabel('');
         setRunText(true);
+        setLoading(false);
         logArr = [];
 
         if(typeof ret.video_id !== 'undefined') {
             setLoading(true);
+            isLoading = true;
             setTextLabel('Fetching...');
 
             const data = await getVODInfo(ret);
@@ -45,14 +62,19 @@ const Icon = () => {
                 const ch = await checkChannel();
 
                 if(ch.channels.some(e => e.name === data.channelname)) {
-                    logArr = await getChatLogs(data.created_at, data.length, data.channelname, setTextLabel);
+                    setTextLabel(`Downloading logs...`);
+                    logArr = await getChatLogs(data.created_at, data.length, data.channelname);
+                    if (!isLoading) return;
+                    isLoading = false;
                     setLoading(false);
                     setRunText(false);
+                    setTextLabel(`Done.`);
                 }
                 else {
                     let temp: any = await chrome.runtime.sendMessage({command: 'get_logs_from_twitch', data: {params: ret, offset: 0, cursor: null}});
                     if (temp.status === 'error') {
                         setTextLabel('Error retrieving logs. Try again later.');
+                        isLoading = false;
                         setLoading(false);
                         return;
                     }
@@ -60,6 +82,7 @@ const Icon = () => {
                     try {
                         temp.data[0].data.video.comments.edges.forEach(e => {
                             if(e.node.commenter == null) return;
+                            if(e.node.message.fragments[0] == null) return;
 
                             logArr.push({
                                 'inSecs': e.node.contentOffsetSeconds,
@@ -71,6 +94,7 @@ const Icon = () => {
                         });
                     } catch(e) {
                         console.error(e);
+                        isLoading = false;
                         setLoading(false);
                         setTextLabel('Failed.');
                         return;
@@ -84,9 +108,12 @@ const Icon = () => {
                     }
 
                     while (true) {
+                        if (!isLoading) return;
+
                         temp = await chrome.runtime.sendMessage({command: 'get_logs_from_twitch', data: {params: ret, offset: null, cursor: cursor}});
                         if (temp.status === 'error') {
                             setTextLabel('Error retrieving logs. Try again later.');
+                            isLoading = false;
                             setLoading(false);
                             return;
                         }
@@ -94,6 +121,7 @@ const Icon = () => {
                         try {
                             temp.data[0].data.video.comments.edges.forEach(e => {
                                 if(e.node.commenter == null) return;
+                                if(e.node.message.fragments[0] == null) return;
 
                                 logArr.push({
                                     'inSecs': e.node.contentOffsetSeconds,
@@ -105,13 +133,14 @@ const Icon = () => {
                             });
                         } catch(e) {
                             console.error(e);
+                            isLoading = false;
                             setLoading(false);
                             setTextLabel('Failed.');
                             setRunText(false);
                             return;
                         }
 
-                        setTextLabel('Fetching... ' + Math.round((logArr.at(-1).inSecs * 100) / data.length) + '%');
+                        if (isLoading) setTextLabel('Fetching... ' + Math.round((logArr.at(-1).inSecs * 100) / data.length) + '%');
 
                         if (temp.data[0].data.video.comments.pageInfo.hasNextPage) {
                             cursor = temp.data[0].data.video.comments.edges.at(-1).cursor;
@@ -122,11 +151,13 @@ const Icon = () => {
                     }
                     
                     setTextLabel('Done.');
+                    isLoading = false;
                     setLoading(false);
                     setRunText(false);
                 }
             }
             else {
+                isLoading = false;
                 setLoading(false);
                 setTextLabel('Could not retrieve VOD info. Try again later.');
             }
@@ -198,6 +229,13 @@ const Icon = () => {
                                 <span>Regex search</span>
                             </label>
                             <div onClick={() => window.open('https://github.com/burakdrk/searchsen', '_blank')}>Guide and source code</div>
+                            {!runText && <div onClick={() => {
+                                const a = document.createElement("a");
+                                const file = new Blob([JSON.stringify(logArr)], { type: "text/plain;charset=utf-8" });
+                                a.href = URL.createObjectURL(file);
+                                a.download = `searchsen_${vodId}.json`;
+                                a.click();
+                            }}>Download Chat JSON</div>}
                         </div>
                     </div>
                     <div className='searchsen-search' style={{padding: isMenuOpen ? '10px' : '4px 10px 10px'}}>
@@ -210,7 +248,7 @@ const Icon = () => {
                     <div className='searchsen-results' style={{display: runText ? 'none' : 'block'}}>
                         <Virtuoso
                             totalCount={resultArray.length}
-                            style={{height: isMenuOpen ? '229.5px' : '363.5px'}}
+                            style={{height: isMenuOpen ? '200px' : '363.5px'}}
                             itemContent = {(index) => {
                                 return (
                                     <div className='searchsen-result-box' onClick={() => {

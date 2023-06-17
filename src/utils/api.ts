@@ -35,20 +35,18 @@ export const checkChannel = async (): Promise<any> => {
     return data;
 }
 
-export const getChatLogs = async (creation: string, duration: number, username: string, setTextLabel: Function): Promise<any> => {
+export const getChatLogs = async (creation: string, duration: number, username: string): Promise<any> => {
     const date = new Date(creation);
     const endDate = moment(date).add(duration, 's').toDate();
 
     const endEpoch = endDate.getTime();
     const startEpoch = date.getTime();
-    setTextLabel(`Downloading ${date.getUTCDate()}/${date.getUTCMonth()+1}/${date.getUTCFullYear()} logs...`);
   
     const res = await fetch(`https://logs.ivr.fi/channel/${username}/${date.getUTCFullYear()}/${date.getUTCMonth()+1}/${date.getUTCDate()}`, {
         'method': 'GET',
     });
 
     if(!res.ok) {
-        setTextLabel(`Failed retreiving logs, reload the tab and try again.`);
         throw new Error('Error retrieving chat');
     }
 
@@ -58,14 +56,12 @@ export const getChatLogs = async (creation: string, duration: number, username: 
 
     let newDate = moment(date).add(1, 'd').utc().startOf('d').toDate();
     while(newDate.getTime() < endDate.getTime()) {
-        setTextLabel(`Downloading ${newDate.getUTCDate()}/${newDate.getUTCMonth()+1}/${newDate.getUTCFullYear()} logs...`);
 
         const res2 = await fetch(`https://logs.ivr.fi/channel/${username}/${newDate.getUTCFullYear()}/${newDate.getUTCMonth()+1}/${newDate.getUTCDate()}`, {
             'method': 'GET',
         });
 
         if(!res2.ok) {
-            setTextLabel(`Failed retreiving logs, reload the tab and try again.`);
             throw new Error('Error retrieving chat');
         }
 
@@ -78,7 +74,6 @@ export const getChatLogs = async (creation: string, duration: number, username: 
     }
  
     let toRet = [];
-    setTextLabel('Done.');
 
     let colors: any = {};
     colors.names = {
