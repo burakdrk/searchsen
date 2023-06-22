@@ -88,7 +88,7 @@ const Icon = () => {
                                 'inSecs': e.node.contentOffsetSeconds,
                                 'intoVod': strDifference(e.node.contentOffsetSeconds),
                                 'user': e.node.commenter.login,
-                                'message': e.node.message.fragments[0].text,
+                                'message': e.node.message.fragments.map(f => f.text).join(''),
                                 'userColor': e.node.message.userColor 
                             });
                         });
@@ -127,7 +127,7 @@ const Icon = () => {
                                     'inSecs': e.node.contentOffsetSeconds,
                                     'intoVod': strDifference(e.node.contentOffsetSeconds),
                                     'user': e.node.commenter.login,
-                                    'message': e.node.message.fragments[0].text,
+                                    'message': e.node.message.fragments.map(f => f.text).join(''),
                                     'userColor': e.node.message.userColor 
                                 });
                             });

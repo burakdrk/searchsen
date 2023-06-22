@@ -1,6 +1,6 @@
 {
   "name": "searchsen",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "to search the chat of twitch vods",
   "scripts": {
     "start": "webpack --watch --progress --config webpack.dev.js",
