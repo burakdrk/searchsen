@@ -1,5 +1,4 @@
 import moment from 'moment';
-import eol from 'eol';
 
 export const getVODInfo = async ({video_id, oauth, client_id}): Promise<any> => {
     const res = await fetch(`https://gql.twitch.tv/gql`, {
@@ -42,7 +41,7 @@ export const getChatLogs = async (creation: string, duration: number, username: 
     const endEpoch = endDate.getTime();
     const startEpoch = date.getTime();
   
-    const res = await fetch(`https://logs.ivr.fi/channel/${username}/${date.getUTCFullYear()}/${date.getUTCMonth()+1}/${date.getUTCDate()}`, {
+    const res = await fetch(`https://logs.ivr.fi/channel/${username}/${date.getUTCFullYear()}/${date.getUTCMonth()+1}/${date.getUTCDate()}?jsonBasic`, {
         'method': 'GET',
     });
 
@@ -50,14 +49,13 @@ export const getChatLogs = async (creation: string, duration: number, username: 
         throw new Error('Error retrieving chat');
     }
 
-    let data = await res.text();
-    let lines = eol.split(data);
-    lines.pop();
+    let data = await res.json();
+    let lines = data.messages;
 
     let newDate = moment(date).add(1, 'd').utc().startOf('d').toDate();
     while(newDate.getTime() < endDate.getTime()) {
 
-        const res2 = await fetch(`https://logs.ivr.fi/channel/${username}/${newDate.getUTCFullYear()}/${newDate.getUTCMonth()+1}/${newDate.getUTCDate()}`, {
+        const res2 = await fetch(`https://logs.ivr.fi/channel/${username}/${newDate.getUTCFullYear()}/${newDate.getUTCMonth()+1}/${newDate.getUTCDate()}?jsonBasic`, {
             'method': 'GET',
         });
 
@@ -65,62 +63,17 @@ export const getChatLogs = async (creation: string, duration: number, username: 
             throw new Error('Error retrieving chat');
         }
 
-        data = await res2.text();
-        const lines2 = eol.split(data);
-        lines2.pop();
+        data = await res2.json();
 
-        lines = lines.concat(lines2);
+        lines = lines.concat(data.messages);
         newDate = moment(newDate).add(1, 'd').utc().startOf('d').toDate();
     }
  
     let toRet = [];
 
-    let colors: any = {};
-    colors.names = {
-        aqua: "#00ffff",
-        azure: "#f0ffff",
-        blue: "#0000ff",
-        brown: "#a52a2a",
-        cyan: "#00ffff",
-        fuchsia: "#ff00ff",
-        gold: "#ffd700",
-        green: "#008000",
-        indigo: "#4b0082",
-        khaki: "#f0e68c",
-        lightblue: "#add8e6",
-        lightcyan: "#e0ffff",
-        lightgreen: "#90ee90",
-        lightpink: "#ffb6c1",
-        lightyellow: "#ffffe0",
-        lime: "#00ff00",
-        magenta: "#ff00ff",
-        olive: "#808000",
-        orange: "#ffa500",
-        pink: "#ffc0cb",
-        purple: "#800080",
-        violet: "#800080",
-        red: "#ff0000",
-        yellow: "#ffff00"
-    };
-
-    colors.random = function() {
-        let result;
-        let count = 0;
-        for (let prop in this.names)
-            if (Math.random() < 1/++count)
-               result = prop;
-        return result;
-    };
-
-    const colorMap = new Map();
-
     for(let i = 0; i<lines.length; ++i) {
-        const c = (lines[i].match(/^[^:]*(?::[^:]*){2}/g)[0].match(/([^ \[\]#]+)/g));
-        const e = (lines[i].split(/^[^:]*(?::[^:]*){2}/g)[1].substring(2));
-        const g = (c[0].match(/([^-]+)/g));
-
-        if(c.length === 4) {
-            const d = new Date(`${g[0]}-${g[1]}-${zeroOrNot(parseInt(g[2]))}${g[2]}T${c[1]}Z`);
+        if(lines[i].id.length > 0) {
+            const d = new Date(lines[i].timestamp);
             const f = (d.getTime());
             const inSecs = Math.floor((f-startEpoch)/1000);
 
@@ -128,9 +81,9 @@ export const getChatLogs = async (creation: string, duration: number, username: 
                 toRet.push({
                     'inSecs': inSecs,
                     'intoVod': strDifference(inSecs),
-                    'user': c[3],
-                    'message': e,
-                    'userColor': colorMap.get(c[3]) ? colorMap.get(c[3]) : colorMap.set(c[3], colors.random()).get(c[3])
+                    'user': lines[i].displayName,
+                    'message': lines[i].text,
+                    'userColor': lines[i].tags.color ? lines[i].tags.color : '#808080'
                 });
             }
         }
