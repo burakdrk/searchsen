@@ -12,3 +12,6 @@ An extension created with React and TypeScript that allows you to search the cha
 - You can build from source
 - You can get it at the Google Chrome Webstore https://chrome.google.com/webstore/detail/searchsen/jncopnckeaddkmiajjmpoglomkhcdfkn
 - You can get the unpacked version from releases and load it in Chrome
+
+## Donate
+XMR (Monero): 8BGPHwwsQHFPyWCYrwXHsxWtCpVXLFfUnMgNCc9dQFnZ22utKoSRnUMEPtUamqCFH96sTbfRPnEdj18kbRbLymZSCRqSMgT
