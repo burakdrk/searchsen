@@ -2,7 +2,7 @@
   "name": "Searchsen - Twitch VOD Chat Search Tool",
   "short_name": "Searchsen",
   "description": "Search the chat of Twitch VODs",
-  "version": "3.1",
+  "version": "3.1.1",
   "manifest_version": 3,
   "icons": {
     "16": "icon.png",

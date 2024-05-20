@@ -5,9 +5,10 @@ import { Virtuoso } from 'react-virtuoso';
 import Switch from "react-switch";
 import './contentScript.css';
 import $ from 'jquery';
+import { ChatLog } from '../types';
 import Draggable from 'react-draggable';
 
-let logArr = [];
+let logArr: ChatLog[] = [];
 let vodId: string = '';
 let isLoading = false;
 
@@ -20,7 +21,7 @@ const Icon = () => {
     const [isChecked3, setIsChecked3] = useState<boolean>(false);
     const [textVal, setTextVal] = useState<string>('');
     const [textLabel, setTextLabel] = useState<string>('');
-    const [resultArray, setResultArray] = useState([]);
+    const [resultArray, setResultArray] = useState<ChatLog[]>([]);
     const [isOpen, setIsOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 

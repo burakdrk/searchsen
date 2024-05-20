@@ -1,24 +1,41 @@
 import moment from 'moment';
+import { ChannelsResponse, ChatLog, VODInfo } from '../types';
 
-export const getVODInfo = async ({video_id, oauth, client_id}): Promise<any> => {
+export const getVODInfo = async ({video_id, oauth, client_id}): Promise<VODInfo> => {
     const res = await fetch(`https://gql.twitch.tv/gql`, {
         'method': 'POST',
         'headers': {
             'authorization': oauth,
             'client-id': client_id,
         },
-        body: JSON.stringify({query: `query {video(id: ${video_id}){createdAt lengthSeconds creator {login}}}`})
+        body: JSON.stringify([{
+            operationName: "VideoMetadata",
+            variables: {
+                channelLogin: "",
+                videoID: video_id
+            },
+            extensions: {
+                persistedQuery: {
+                    version: 1,
+                    sha256Hash: "45111672eea2e507f8ba44d101a61862f9c56b11dee09a15634cb75cb9b9084d"
+                }
+            }
+        }])
     });
-  
+
     if(!res.ok) {
         throw new Error('Error retrieving VOD Info')
     }
 
     const data = await res.json();
-    return {channelname: data.data.video.creator.login, created_at: data.data.video.createdAt, length: data.data.video.lengthSeconds};
+    return {
+        channelname: data[0].data.video.owner.login,
+        created_at: data[0].data.video.createdAt,
+        length: data[0].data.video.lengthSeconds
+    }
 }
 
-export const checkChannel = async (): Promise<any> => {
+export const checkChannel = async (): Promise<ChannelsResponse> => {
     const res = await fetch('https://logs.ivr.fi/channels', {
         'method': 'GET',
         'headers': {
@@ -34,7 +51,7 @@ export const checkChannel = async (): Promise<any> => {
     return data;
 }
 
-export const getChatLogs = async (creation: string, duration: number, username: string): Promise<any> => {
+export const getChatLogs = async (creation: string, duration: number, username: string) => {
     const date = new Date(creation);
     const endDate = moment(date).add(duration, 's').toDate();
 
@@ -69,7 +86,7 @@ export const getChatLogs = async (creation: string, duration: number, username: 
         newDate = moment(newDate).add(1, 'd').utc().startOf('d').toDate();
     }
  
-    let toRet = [];
+    let toRet: ChatLog[] = [];
 
     for(let i = 0; i<lines.length; ++i) {
         if(lines[i].id.length > 0) {
@@ -92,8 +109,8 @@ export const getChatLogs = async (creation: string, duration: number, username: 
     return toRet;
 }
 
-export const returnSearchedArray = (origArr: Array<Object|any>, pattern: string, isSensitive: boolean, isName: boolean, isRegex: boolean): Array<Object> => {
-    let indexArray = []
+export const returnSearchedArray = (origArr: ChatLog[], pattern: string, isSensitive: boolean, isName: boolean, isRegex: boolean) => {
+    let indexArray: ChatLog[] = []
     for(let i = 0; i < origArr.length; ++i) {
         if(isRegex) {
             if(origArr[i].message.match(pattern)) {
@@ -122,16 +139,11 @@ export const returnSearchedArray = (origArr: Array<Object|any>, pattern: string,
     return indexArray;
 }
 
-export const strDifference = (secs): string => {
+export const strDifference = (secs: number): string => {
     const h = Math.floor(secs / 3600);
     secs %= 3600;
     const m = Math.floor(secs / 60);
     const s = secs % 60;
 
     return `${h}h${m}m${s}s`;
-}
-
-const zeroOrNot = (time: number): string => {
-    if(time < 10) return '0';
-    return '';
 }
