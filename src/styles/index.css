@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#plasmo-shadow-container {
+  z-index: unset !important;
+  font-family: "Inter", sans-serif;
+}
+
+#plasmo-shadow-container [type="search"]::-webkit-search-cancel-button {
+  display: none;
+}
+
+* {
+  user-select: none;
+}
