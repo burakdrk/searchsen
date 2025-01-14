@@ -1,5 +1,6 @@
 import type { PlasmoMessaging } from "@plasmohq/messaging";
-import type { GenericResponseBody } from "~types";
+import type { GenericResponseBody, JustlogResponse, Logs } from "~types";
+import { parseTwitchEmotes, strDifference } from "~utils/background";
 
 export type GetLogsFromJustlogRequest = {
   channelName: string;
@@ -10,7 +11,7 @@ export type GetLogsFromJustlogRequest = {
 
 const handler: PlasmoMessaging.MessageHandler<
   GetLogsFromJustlogRequest,
-  GenericResponseBody<unknown>
+  GenericResponseBody<Logs[]>
 > = async (req, res) => {
   if (!req.body) {
     res.send({ error: "Missing request body" });
@@ -31,11 +32,24 @@ const handler: PlasmoMessaging.MessageHandler<
       throw new Error();
     }
 
-    const data = await apiRes.json();
+    const data: JustlogResponse = await apiRes.json();
 
-    console.log(data);
+    res.send({
+      data: data.messages.map((msg) => {
+        const d = new Date(msg.timestamp);
+        const f = d.getTime();
+        const secs = Math.floor((f - from) / 1000);
 
-    res.send({ data: "buh" });
+        return {
+          secs,
+          intoVod: strDifference(secs),
+          user: msg.displayName,
+          message: msg.text,
+          color: msg.tags.color || "#808080",
+          emotes: parseTwitchEmotes(msg.tags.emotes)
+        };
+      })
+    });
   } catch (error) {
     console.error(error);
     res.send({ error: "Error fetching logs" });

@@ -1,0 +1,4 @@
+build
+.plasmo
+node_modules
+tailwind.config.js

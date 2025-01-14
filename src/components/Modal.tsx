@@ -27,7 +27,7 @@ function Modal({ onClose }: ModalProps) {
         }}
         position={{ x: _window.x, y: _window.y }}
         onDragStop={(e, d) => _window.setPosition(d.x, d.y)}
-        onResizeStop={(e, direction, ref, delta, position) => {
+        onResize={(e, direction, ref, delta, position) => {
           _window.setSize(ref.offsetWidth, ref.offsetHeight);
           _window.setPosition(position.x, position.y);
         }}
@@ -62,7 +62,9 @@ function Modal({ onClose }: ModalProps) {
             </div>
           </header>
 
-          <div className={`flex flex-1 ${isTransparent ? "opacity-60" : ""}`}>
+          <div
+            className={`flex flex-1 bg-black ${isTransparent ? "opacity-60" : ""}`}
+          >
             <Sidebar />
             <Content />
           </div>

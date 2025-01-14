@@ -1,12 +1,10 @@
 import { sendToBackground } from "@plasmohq/messaging";
-import type { GetLogsFromJustlogRequest } from "~background/messages/getLogsFromJustLog";
+import type { GetLogsFromJustlogRequest } from "~background/messages/getLogsFromJustlog";
 import type {
   GetVODInfoRequest,
   GetVODInfoResponse
 } from "~background/messages/getVODInfo";
-import type { GenericResponseBody } from "~types";
-
-const SEARCHSEN_EXT_ID = "ichpdcknemodiobolcgiipfchoanoken";
+import type { GenericResponseBody, Logs } from "~types";
 
 export const getVODInfo = ({
   video_id,
@@ -22,16 +20,14 @@ export const getVODInfo = ({
       video_id,
       oauth,
       client_id
-    },
-    extensionId: SEARCHSEN_EXT_ID
+    }
   });
 };
 
 export const getAPILinks = (channelname: string) => {
   return sendToBackground<string, GenericResponseBody<string[]>>({
     name: "getAPILinks",
-    body: channelname,
-    extensionId: SEARCHSEN_EXT_ID
+    body: channelname
   });
 };
 
@@ -43,7 +39,7 @@ export const getLogsFromJustlog = ({
 }: GetLogsFromJustlogRequest) => {
   return sendToBackground<
     GetLogsFromJustlogRequest,
-    GenericResponseBody<unknown>
+    GenericResponseBody<Logs[]>
   >({
     name: "getLogsFromJustlog",
     body: {
@@ -51,7 +47,6 @@ export const getLogsFromJustlog = ({
       channelName,
       from,
       to
-    },
-    extensionId: SEARCHSEN_EXT_ID
+    }
   });
 };

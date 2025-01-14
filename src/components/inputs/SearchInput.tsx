@@ -4,12 +4,15 @@ import IconButton from "./IconButton";
 import { IoIosCheckmark } from "react-icons/io";
 import { useStore } from "~utils";
 
-function SearchInput() {
+type SearchInputProps = {
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  value: string;
+};
+
+function SearchInput({ onChange, value }: SearchInputProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const searchOptions = useStore((state) => state.searchOptions);
-  const searchValue = useStore((state) => state.searchValue);
-  const setSearchValue = useStore((state) => state.setSearchValue);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
@@ -34,7 +37,7 @@ function SearchInput() {
   }, []);
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full z-10">
       <input
         className="border-2 border-solid bg-transparent border-[#434343] text-text-default
           active:border-accent focus:border-accent focus:outline-none rounded-lg px-4 py-2
@@ -45,8 +48,8 @@ function SearchInput() {
             ? `Enter ${searchOptions.searchMode} to search`
             : "Enter username to search"
         }
-        value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
+        value={value}
+        onChange={onChange}
       />
       <div
         className="absolute top-0 right-0 h-full flex items-center p-2"

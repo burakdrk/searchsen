@@ -1,3 +1,5 @@
+import type { Logs } from "./api";
+
 type PageType = "search" | "settings" | "stats";
 
 export type State = {
@@ -16,6 +18,11 @@ export type State = {
     isCaseSensitive: boolean;
     isUsernameSearch: boolean;
   };
+
+  logs: {
+    data: Logs[];
+    fetchedFor: string | null;
+  };
 };
 
 export type Actions = {
@@ -31,5 +38,9 @@ export type Actions = {
   window: {
     setSize: (width: number, height: number) => void;
     setPosition: (x: number, y: number) => void;
+  };
+
+  logs: {
+    setData: (data: Logs[], fetchedFor: string | null) => void;
   };
 };

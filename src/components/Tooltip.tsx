@@ -49,7 +49,7 @@ const Tooltip = ({
       {/* Tooltip box with transition effects */}
       {showTooltip && (
         <div
-          className={`absolute whitespace-nowrap bg-white text-black px-2 py-1 text-xl rounded z-10
+          className={`absolute whitespace-nowrap bg-white text-black px-2 py-1 text-xl rounded z-20
           font-bold shadow-lg opacity-0 scale-95 transition-all duration-200 ease-in-out
           ${positionClasses[position]}
           ${visible ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}

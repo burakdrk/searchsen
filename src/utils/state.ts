@@ -26,6 +26,16 @@ const useStore = create<State & Actions>((set) => {
         }))
     },
 
+    logs: {
+      data: [],
+      fetchedFor: null,
+
+      setData: (data, fetchedFor) =>
+        set((state) => ({
+          logs: { ...state.logs, data, fetchedFor }
+        }))
+    },
+
     searchOptions: {
       searchMode: "text",
       isCaseSensitive: false,
