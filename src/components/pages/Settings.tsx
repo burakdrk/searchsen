@@ -1,7 +1,6 @@
 import Switch from "~components/ui/Switch";
 import logo from "data-base64:assets/icon.png";
 import { FaGithub } from "react-icons/fa";
-import { IoMail } from "react-icons/io5";
 import { Storage } from "@plasmohq/storage";
 import { useStorage } from "@plasmohq/storage/hook";
 
@@ -81,13 +80,6 @@ function Settings() {
               >
                 <FaGithub className="w-6 h-6" />
                 Source Code
-              </a>
-              <a
-                href="mailto:bduruk@proton.me"
-                className="hover:underline flex gap-2 flex-row items-center"
-              >
-                <IoMail className="w-6 h-6" />
-                Contact
               </a>
             </div>
           </div>
