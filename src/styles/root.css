@@ -1,0 +1,7 @@
+#plasmo-searchsen-btn {
+  top: 1rem;
+  right: 1rem;
+  position: absolute;
+  display: flex;
+  z-index: 11;
+}

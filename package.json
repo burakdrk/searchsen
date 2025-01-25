@@ -1,38 +1,66 @@
 {
   "name": "searchsen",
-  "version": "3.1.1",
-  "description": "to search the chat of twitch vods",
-  "scripts": {
-    "start": "webpack --watch --progress --config webpack.dev.js",
-    "build": "webpack --watch --progress --config webpack.prod.js"
-  },
+  "displayName": "Searchsen",
+  "version": "4.0.0",
+  "description": "Browser extension to search and analyze the chat logs of Twitch VODs",
   "author": "Burak Duruk",
+  "scripts": {
+    "dev": "plasmo dev",
+    "lint": "eslint . --ext .ts,.tsx",
+    "build": "pnpm lint && plasmo build",
+    "package": "pnpm lint && plasmo package"
+  },
+  "dependencies": {
+    "@datastructures-js/priority-queue": "^6.3.2",
+    "@plasmohq/messaging": "^0.6.2",
+    "@plasmohq/storage": "^1.13.0",
+    "@reduxjs/toolkit": "^2.5.0",
+    "d3": "^7.9.0",
+    "plasmo": "0.89.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-hot-toast": "^2.5.1",
+    "react-icons": "^5.4.0",
+    "react-redux": "^9.2.0",
+    "react-rnd": "^10.4.14",
+    "react-switch": "^7.1.0",
+    "react-virtuoso": "^4.12.3",
+    "uuid": "^11.0.5"
+  },
   "devDependencies": {
-    "@emotion/react": "^11.7.1",
-    "@emotion/styled": "^11.6.0",
-    "@types/chrome": "^0.0.134",
-    "@types/react": "^17.0.3",
-    "@types/react-dom": "^17.0.3",
-    "axios": "^1.4.0",
-    "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^7.0.0",
-    "css-loader": "^5.2.4",
-    "eol": "^0.9.1",
-    "html-webpack-plugin": "^4.5.2",
-    "jquery": "^3.6.1",
-    "moment": "^2.29.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-draggable": "^4.4.5",
-    "react-switch": "^7.0.0",
-    "react-virtuoso": "^2.4.0",
-    "react-window": "^1.8.6",
-    "style-loader": "^2.0.0",
-    "terser-webpack-plugin": "^5.1.1",
-    "ts-loader": "^8.1.0",
-    "typescript": "^4.2.4",
-    "webpack": "^5.34.0",
-    "webpack-cli": "^4.6.0",
-    "webpack-merge": "^5.7.3"
+    "@eslint/compat": "^1.2.5",
+    "@ianvs/prettier-plugin-sort-imports": "4.1.1",
+    "@types/chrome": "0.0.258",
+    "@types/d3": "^7.4.3",
+    "@types/node": "20.11.5",
+    "@types/react": "18.2.48",
+    "@types/react-dom": "18.2.18",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-typescript": "18.0.0",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-import": "2.29.1",
+    "eslint-plugin-jsx-a11y": "6.9.0",
+    "eslint-plugin-prettier": "5.2.1",
+    "eslint-plugin-react": "7.35.0",
+    "eslint-plugin-react-hooks": "4.6.2",
+    "eslint-plugin-tailwindcss": "^3.17.5",
+    "globals": "^15.14.0",
+    "postcss": "^8.4.49",
+    "prettier": "3.2.4",
+    "prettier-plugin-classnames": "^0.7.5",
+    "prettier-plugin-tailwindcss": "^0.6.9",
+    "tailwindcss": "^3.4.17",
+    "typescript": "5.3.3"
+  },
+  "manifest": {
+    "host_permissions": [
+      "*://*.twitch.tv/*"
+    ],
+    "permissions": [
+      "webRequest"
+    ]
   }
 }
