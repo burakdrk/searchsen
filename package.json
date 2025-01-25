@@ -1,6 +1,6 @@
 {
   "name": "searchsen",
-  "displayName": "Searchsen",
+  "displayName": "Searchsen - Twitch VOD Chat Search Tool",
   "version": "4.0.0",
   "description": "Browser extension to search and analyze the chat logs of Twitch VODs",
   "author": "Burak Duruk",
