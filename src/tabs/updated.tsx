@@ -20,11 +20,6 @@ const UpdatePage = () => {
       title: "More channels",
       description:
         "Now the extensions uses multiple justlog instances for a broader support."
-    },
-    {
-      title: "Firefox support",
-      description: "Added support for Firefox based browsers.",
-      link: "https://addons.mozilla.org/en-US/firefox/addon/searchsen/"
     }
   ];
 
@@ -41,16 +36,6 @@ const UpdatePage = () => {
             <li key={index} className="border-b border-gray-700 pb-8">
               <h2 className="text-xl">{update.title}</h2>
               <p className="text-base mt-2">{update.description}</p>
-              {update.link && (
-                <a
-                  href={update.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline"
-                >
-                  {update.link}
-                </a>
-              )}
             </li>
           ))}
         </ul>
