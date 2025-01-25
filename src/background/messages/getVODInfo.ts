@@ -11,6 +11,7 @@ export type GetVODInfoResponse = {
   channelname: string;
   created_at: string;
   length: number;
+  channelid: string;
 };
 
 const handler: PlasmoMessaging.MessageHandler<
@@ -63,7 +64,8 @@ const handler: PlasmoMessaging.MessageHandler<
       data: {
         channelname: data[0].data.video.owner.login,
         created_at: data[0].data.video.createdAt,
-        length: data[0].data.video.lengthSeconds
+        length: data[0].data.video.lengthSeconds,
+        channelid: data[0].data.video.owner.id
       }
     });
   } catch (error) {

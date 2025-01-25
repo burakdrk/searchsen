@@ -2,17 +2,21 @@ import { useEffect, useRef, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import IconButton from "./IconButton";
 import { IoIosCheckmark } from "react-icons/io";
-import { useStore } from "~utils";
+import { useAppDispatch, useAppSelector } from "~hooks/redux";
+import {
+  setIsCaseSensitive,
+  setIsUsernameSearch,
+  setSearchMode
+} from "~store/appSlice";
 
-type SearchInputProps = {
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  value: string;
-};
+interface SearchInputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {}
 
-function SearchInput({ onChange, value }: SearchInputProps) {
+function SearchInput({ ...props }: SearchInputProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const searchOptions = useStore((state) => state.searchOptions);
+  const searchOptions = useAppSelector((state) => state.app.searchOptions);
+  const dispatch = useAppDispatch();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
@@ -39,7 +43,7 @@ function SearchInput({ onChange, value }: SearchInputProps) {
   return (
     <div className="relative w-full z-10">
       <input
-        className="border-2 border-solid bg-transparent border-[#434343] text-text-default
+        className="border-2 border-solid bg-transparent border-default-border text-text-default
           active:border-accent focus:border-accent focus:outline-none rounded-lg px-4 py-2
           w-full text-2xl pr-12"
         type="search"
@@ -48,8 +52,7 @@ function SearchInput({ onChange, value }: SearchInputProps) {
             ? `Enter ${searchOptions.searchMode} to search`
             : "Enter username to search"
         }
-        value={value}
-        onChange={onChange}
+        {...props}
       />
       <div
         className="absolute top-0 right-0 h-full flex items-center p-2"
@@ -61,14 +64,14 @@ function SearchInput({ onChange, value }: SearchInputProps) {
 
         <div
           ref={dropdownRef}
-          className={`absolute top-12 right-0 w-64 bg-[#1f1f23] rounded-md border border-[#434343]
+          className={`absolute top-12 right-0 w-64 bg-dark rounded-md border border-default-border
             ${dropdownOpen ? "block" : "hidden"} text-xl`}
         >
           <button
-            className="w-full text-left px-4 py-2 hover:bg-[#434343] flex justify-between"
+            className="w-full text-left px-4 py-2 hover:bg-default-border flex justify-between"
             onClick={(e) => {
               e.stopPropagation();
-              searchOptions.setSearchMode("text");
+              dispatch(setSearchMode("text"));
             }}
           >
             Text search
@@ -77,12 +80,12 @@ function SearchInput({ onChange, value }: SearchInputProps) {
             )}
           </button>
           <button
-            className="w-full text-left px-4 py-2 hover:bg-[#434343] flex justify-between"
+            className="w-full text-left px-4 py-2 hover:bg-default-border flex justify-between"
             onClick={(e) => {
               e.stopPropagation();
-              searchOptions.setSearchMode("regex");
-              searchOptions.setIsCaseSensitive(false);
-              searchOptions.setIsUsernameSearch(false);
+              dispatch(setSearchMode("regex"));
+              dispatch(setIsCaseSensitive(false));
+              dispatch(setIsUsernameSearch(false));
             }}
           >
             Regex search
@@ -92,16 +95,16 @@ function SearchInput({ onChange, value }: SearchInputProps) {
           </button>
           {searchOptions.searchMode !== "regex" && (
             <>
-              <div className="h-0.5 bg-[#434343] w-full"></div>
+              <div className="h-0.5 bg-default-border w-full"></div>
 
               {!searchOptions.isUsernameSearch && (
                 <>
                   <button
-                    className="w-full text-left px-4 py-2 hover:bg-[#434343] flex justify-between"
+                    className="w-full text-left px-4 py-2 hover:bg-default-border flex justify-between"
                     onClick={(e) => {
                       e.stopPropagation();
-                      searchOptions.setIsCaseSensitive(
-                        !searchOptions.isCaseSensitive
+                      dispatch(
+                        setIsCaseSensitive(!searchOptions.isCaseSensitive)
                       );
                     }}
                   >
@@ -114,13 +117,13 @@ function SearchInput({ onChange, value }: SearchInputProps) {
               )}
 
               <button
-                className="w-full text-left px-4 py-2 hover:bg-[#434343] flex justify-between"
+                className="w-full text-left px-4 py-2 hover:bg-default-border flex justify-between"
                 onClick={(e) => {
                   e.stopPropagation();
-                  searchOptions.setIsUsernameSearch(
-                    !searchOptions.isUsernameSearch
+                  dispatch(
+                    setIsUsernameSearch(!searchOptions.isUsernameSearch)
                   );
-                  searchOptions.setIsCaseSensitive(false);
+                  dispatch(setIsCaseSensitive(false));
                 }}
               >
                 Username search

@@ -1,16 +1,60 @@
 export {};
 
-chrome.webNavigation.onHistoryStateUpdated.addListener(
-  (details) => {
-    console.log("dURL changed to:", details.url);
+import { Storage } from "@plasmohq/storage";
 
-    // Handle the URL change
-    if (details.url.includes("/new-chat")) {
-      console.log("New chat page detected");
-      // Perform specific actions for the new chat page
-    }
-  },
-  {
-    url: [{ hostContains: "www.twitch.tv" }] // Optional filter to target specific domains
+declare global {
+  interface Window {
+    chunks: {
+      data: string[];
+      index: number;
+    };
   }
+}
+
+const storage = new Storage({
+  area: "local"
+});
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+  if (changeInfo.url) {
+    chrome.tabs.sendMessage(tabId, { message: "searchsen_tabUpdated" });
+  }
+});
+
+chrome.webRequest.onBeforeSendHeaders.addListener(
+  (details) => {
+    (async () => {
+      if (details.initiator?.toLowerCase().startsWith("chrome-extension")) {
+        return;
+      }
+
+      const headers = details.requestHeaders;
+      if (!headers) {
+        return;
+      }
+
+      const token = headers.find(
+        (obj) => obj.name === "Client-Integrity"
+      )?.value;
+      if (!token) {
+        return;
+      }
+
+      const savedToken = await storage.get("integrity");
+      if (savedToken === token) {
+        return;
+      }
+
+      await storage.set("integrity", token);
+      console.log("Token is set");
+    })();
+  },
+  { urls: ["https://gql.twitch.tv/gql"] },
+  ["requestHeaders"]
 );
+
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === "update") {
+    chrome.tabs.create({ url: chrome.runtime.getURL("tabs/updated.html") });
+  }
+});

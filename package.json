@@ -11,20 +11,26 @@
     "package": "pnpm lint && plasmo package"
   },
   "dependencies": {
+    "@datastructures-js/priority-queue": "^6.3.2",
     "@plasmohq/messaging": "^0.6.2",
     "@plasmohq/storage": "^1.13.0",
+    "@reduxjs/toolkit": "^2.5.0",
+    "d3": "^7.9.0",
     "plasmo": "0.89.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hot-toast": "^2.5.1",
     "react-icons": "^5.4.0",
+    "react-redux": "^9.2.0",
     "react-rnd": "^10.4.14",
-    "react-virtuoso": "^4.12.3",
-    "zustand": "^5.0.3"
+    "react-switch": "^7.1.0",
+    "react-virtuoso": "^4.12.3"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.5",
     "@ianvs/prettier-plugin-sort-imports": "4.1.1",
     "@types/chrome": "0.0.258",
+    "@types/d3": "^7.4.3",
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
@@ -53,8 +59,7 @@
       "*://*.twitch.tv/*"
     ],
     "permissions": [
-      "tabs",
-      "webNavigation"
+      "webRequest"
     ]
   }
 }

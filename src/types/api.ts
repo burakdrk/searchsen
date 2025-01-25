@@ -3,30 +3,37 @@ export type GenericResponseBody<T> = {
   error?: string;
 };
 
-export type JustlogResponse = {
-  messages: JustlogMessage[];
-};
-
 type JustlogMessage = {
   text: string;
   displayName: string;
   timestamp: string;
   id: string;
-  tags: JustlogTags;
+  tags: {
+    emotes: string;
+    color?: string;
+  };
 };
 
-type JustlogTags = {
-  emotes: string;
-  color?: string;
+export type JustlogResponse = {
+  messages: JustlogMessage[];
 };
 
 export type Logs = {
-  secs: number;
-  intoVod: string;
-  user: string;
-  message: string;
-  color: string;
-  emotes: TwtichEmote[];
+  s: number;
+  u: string;
+  m: string;
+  c: string;
 };
 
-export type TwtichEmote = { emoteId: string; start: number; end: number };
+export type Emote = {
+  name: string;
+  url: string;
+  type: "twitch" | "bttv" | "7tv" | "ffz";
+};
+
+export type TwitchTokens = {
+  video_id: string;
+  oauth: string;
+  client_id: string;
+  unique_id: string;
+};

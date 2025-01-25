@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
+import Tooltip from "~components/ui/Tooltip";
 
 function StartButton() {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -56,15 +57,17 @@ function StartButton() {
     <>
       {isChatOpen && (
         <div className="w-12 h-12 flex items-center justify-center hover:bg-hover-bg rounded-md z-10">
-          <button
-            onClick={() => {
-              window.postMessage("toggle-searchsen", "*");
-            }}
-            data-tooltip-id="searchsen-tooltip"
-            data-tooltip="Searchsen"
-          >
-            <IoSearchSharp className="w-8 h-8" />
-          </button>
+          <Tooltip content="Searchsen" position="left">
+            <button
+              onClick={() => {
+                window.postMessage("toggle-searchsen", "*");
+              }}
+              data-tooltip-id="searchsen-tooltip"
+              data-tooltip="Searchsen"
+            >
+              <IoSearchSharp className="w-8 h-8" />
+            </button>
+          </Tooltip>
         </div>
       )}
     </>

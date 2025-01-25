@@ -1,13 +1,14 @@
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { IoCloseOutline } from "react-icons/io5";
 import { Rnd } from "react-rnd";
-
-import Logo from "./Logo";
+import { Toaster } from "react-hot-toast";
+import Logo from "./ui/Logo";
 import IconButton from "./inputs/IconButton";
-import Sidebar from "./Sidebar";
 import Content from "./Content";
-import { useState } from "react";
-import { useStore } from "~utils";
+import { useEffect, useState } from "react";
+import Sidebar from "./ui/Sidebar";
+import { useAppDispatch } from "~hooks/redux";
+import { setSize } from "~store/appSlice";
 
 type ModalProps = {
   onClose: () => void;
@@ -15,21 +16,41 @@ type ModalProps = {
 
 function Modal({ onClose }: ModalProps) {
   const [isTransparent, setIsTransparent] = useState(false);
+  const dispatch = useAppDispatch();
 
-  const _window = useStore((state) => state.window);
+  useEffect(() => {
+    const shadowHost = document.querySelector("#plasmo-searchsen");
+    if (!shadowHost) return;
+
+    const shadowRoot = shadowHost.shadowRoot;
+    if (!shadowRoot) return;
+
+    const element = shadowRoot.querySelector(".react-draggable");
+    if (!element) return;
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const newWidth = entry.contentRect.width;
+        const newHeight = entry.contentRect.height;
+        dispatch(setSize({ width: newWidth, height: newHeight }));
+      }
+    });
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [dispatch]);
 
   return (
     <div className="fixed left-0 top-0 z-[10000]">
       <Rnd
-        size={{
-          height: _window.height,
-          width: _window.width
-        }}
-        position={{ x: _window.x, y: _window.y }}
-        onDragStop={(e, d) => _window.setPosition(d.x, d.y)}
-        onResize={(e, direction, ref, delta, position) => {
-          _window.setSize(ref.offsetWidth, ref.offsetHeight);
-          _window.setPosition(position.x, position.y);
+        default={{
+          x: (window.innerWidth - 700) / 2,
+          y: (window.innerHeight - 550) / 2,
+          width: 700,
+          height: 550
         }}
         minWidth={400}
         minHeight={220}
@@ -37,13 +58,13 @@ function Modal({ onClose }: ModalProps) {
         bounds="window"
       >
         <div
-          className={
-            "flex h-full w-full flex-col rounded-md border border-[#434343] shadow-lg"
-          }
+          id="searchsen-root"
+          className={`flex h-full w-full flex-col rounded-md border border-default-border shadow-lg
+            ${isTransparent ? "opacity-50" : ""}`}
         >
           <header
             className={`searchsen-drag-handle flex cursor-move items-center justify-between border-b
-              border-[#434343] bg-[#1f1f23] px-4 py-2 bg-opacity-90`}
+              rounded-t-md border-default-border bg-dark px-4 py-2 bg-opacity-90`}
           >
             <Logo />
 
@@ -62,9 +83,9 @@ function Modal({ onClose }: ModalProps) {
             </div>
           </header>
 
-          <div
-            className={`flex flex-1 bg-black ${isTransparent ? "opacity-60" : ""}`}
-          >
+          <Toaster />
+
+          <div className={"flex flex-1 overflow-y-auto rounded-b-md bg-black"}>
             <Sidebar />
             <Content />
           </div>
