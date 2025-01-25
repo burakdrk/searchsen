@@ -37,25 +37,42 @@ function Results({ results }: ResultsProps) {
             className="p-2 pl-6 w-full text-left break-words hover:bg-hover-bg transition-colors
               duration-100 ease-in-out min-h-16"
             onClick={() => handleTimeUpdate(log.s)}
-            onContextMenu={(e) => {
-              e.preventDefault();
-              navigator.clipboard.writeText(log.m);
-              toast.custom((t) => (
-                <Toast
-                  id={t.id}
-                  message="Copied to clipboard"
-                  visible={t.visible}
-                />
-              ));
-            }}
           >
             <span className="text-[#ffffffbf] text-base align-middle">
               {strDifference(log.s)}
             </span>{" "}
-            <span style={{ color: log.c }} className="font-bold">
+            <span
+              style={{ color: log.c }}
+              className="font-bold"
+              onContextMenu={(e) => {
+                e.preventDefault();
+                navigator.clipboard.writeText(log.u);
+                toast.custom((t) => (
+                  <Toast
+                    id={t.id}
+                    message="Copied username"
+                    visible={t.visible}
+                  />
+                ));
+              }}
+            >
               {log.u}
             </span>
-            : <Message message={log.m} />
+            :{" "}
+            <Message
+              message={log.m}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                navigator.clipboard.writeText(log.m);
+                toast.custom((t) => (
+                  <Toast
+                    id={t.id}
+                    message="Copied message"
+                    visible={t.visible}
+                  />
+                ));
+              }}
+            />
           </button>
         )}
       />

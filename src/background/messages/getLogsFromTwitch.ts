@@ -119,7 +119,7 @@ const handler: PlasmoMessaging.MessageHandler<
       }
     });
   } catch (error) {
-    console.error(error);
+    console.log(error);
     res.send({ error: "Error fetching logs" });
   }
 };

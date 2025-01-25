@@ -7,24 +7,31 @@ export type GetChunksResponse = {
 };
 
 const handler: PlasmoMessaging.MessageHandler<
-  void,
+  string,
   GenericResponseBody<GetChunksResponse>
-> = async (_, res) => {
+> = async (req, res) => {
+  const chunkID = req.body;
+  if (!chunkID) {
+    res.send({ error: "Missing chunk ID" });
+    return;
+  }
+
   try {
     if (
-      self.chunks.data.length === 0 ||
-      self.chunks.index === self.chunks.data.length
+      self.chunksMap[chunkID].data.length === 0 ||
+      self.chunksMap[chunkID].index === self.chunksMap[chunkID].data.length
     ) {
       throw new Error("No logs to send");
     }
 
-    self.chunks.index++;
+    self.chunksMap[chunkID].index++;
 
-    const done = self.chunks.index === self.chunks.data.length - 1;
+    const done =
+      self.chunksMap[chunkID].index === self.chunksMap[chunkID].data.length - 1;
 
     res.send({
       data: {
-        data: self.chunks.data[self.chunks.index],
+        data: self.chunksMap[chunkID].data[self.chunksMap[chunkID].index],
         done
       }
     });
@@ -32,13 +39,10 @@ const handler: PlasmoMessaging.MessageHandler<
     // Clear chunks if we're done
     if (done) {
       console.log("Clearing chunks");
-      self.chunks = {
-        data: [],
-        index: 0
-      };
+      delete self.chunksMap[chunkID];
     }
   } catch (error) {
-    console.error(error);
+    console.log(error);
     res.send({ error: "Error getting logs" });
   }
 };

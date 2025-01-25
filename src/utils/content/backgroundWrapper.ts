@@ -61,9 +61,10 @@ export const getLogsFromJustlog = ({
   });
 };
 
-export const getChunks = () => {
-  return sendToBackground<void, GenericResponseBody<GetChunksResponse>>({
-    name: "getChunks"
+export const getChunks = (chunkID: string) => {
+  return sendToBackground<string, GenericResponseBody<GetChunksResponse>>({
+    name: "getChunks",
+    body: chunkID
   });
 };
 

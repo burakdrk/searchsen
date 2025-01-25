@@ -24,7 +24,8 @@
     "react-redux": "^9.2.0",
     "react-rnd": "^10.4.14",
     "react-switch": "^7.1.0",
-    "react-virtuoso": "^4.12.3"
+    "react-virtuoso": "^4.12.3",
+    "uuid": "^11.0.5"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.5",

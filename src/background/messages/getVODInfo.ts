@@ -29,8 +29,8 @@ const handler: PlasmoMessaging.MessageHandler<
     const apiRes = await fetch(`https://gql.twitch.tv/gql`, {
       method: "POST",
       headers: {
-        authorization: oauth,
-        client_id
+        Authorization: oauth,
+        "Client-ID": client_id
       },
       body: JSON.stringify([
         {
@@ -69,7 +69,7 @@ const handler: PlasmoMessaging.MessageHandler<
       }
     });
   } catch (error) {
-    console.error(error);
+    console.log(error);
     res.send({ error: "Failed to get VOD details" });
   }
 };

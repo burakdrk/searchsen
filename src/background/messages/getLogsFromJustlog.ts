@@ -9,6 +9,7 @@ import {
   ThirdPartyEmoteService
 } from "~utils/background/emotes";
 import { MAX_CHUNK_SIZE } from "~utils/shared/constants";
+import { v4 as uuidv4 } from "uuid";
 
 export type GetLogsFromJustlogRequest = {
   channelName: string;
@@ -21,6 +22,7 @@ export type GetLogsFromJustlogRequest = {
 export type GetLogsFromJustlogResponse = {
   data: string;
   done: boolean;
+  chunkID: string;
 };
 
 const handler: PlasmoMessaging.MessageHandler<
@@ -118,7 +120,9 @@ const handler: PlasmoMessaging.MessageHandler<
       emotes: allEmotes
     });
 
-    self.chunks = {
+    const chunkID = uuidv4();
+
+    self.chunksMap[chunkID] = {
       data: [],
       index: 0
     };
@@ -129,18 +133,28 @@ const handler: PlasmoMessaging.MessageHandler<
     while (ii < len) {
       const nextIndex = Math.min(ii + step, len);
       const substr = serializedData.substring(ii, nextIndex);
-      self.chunks.data.push(substr);
+      self.chunksMap[chunkID].data.push(substr);
       ii = nextIndex;
     }
 
+    const done =
+      self.chunksMap[chunkID].index === self.chunksMap[chunkID].data.length - 1;
+
     res.send({
       data: {
-        data: self.chunks.data[self.chunks.index],
-        done: self.chunks.index === self.chunks.data.length - 1
+        data: self.chunksMap[chunkID].data[self.chunksMap[chunkID].index],
+        done,
+        chunkID
       }
     });
+
+    // Clear chunks if we're done
+    if (done) {
+      console.log("Clearing chunks");
+      delete self.chunksMap[chunkID];
+    }
   } catch (error) {
-    console.error(error);
+    console.log(error);
     res.send({ error: "Error fetching logs" });
   }
 };

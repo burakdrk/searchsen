@@ -30,7 +30,12 @@ function Loading({ message }: LoadingProps) {
         </g>
       </svg>
 
-      <p className="mt-2 text-text-default text-2xl font-bold">{message}</p>
+      <p className="mt-1 text-text-default text-2xl font-bold">{message}</p>
+      {message && (
+        <p className="text-text-default text-lg">
+          <em>Don&apos;t close this window</em>
+        </p>
+      )}
     </div>
   );
 }

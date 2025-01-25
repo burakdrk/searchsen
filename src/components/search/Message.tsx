@@ -1,9 +1,9 @@
 import { useAppSelector } from "~hooks/redux";
 import type { Emote } from "~types";
 
-type MessageProps = {
+interface MessageProps extends React.HTMLAttributes<HTMLSpanElement> {
   message: string;
-};
+}
 
 const parse = (msg: string, emotes: Record<string, Emote>) => {
   const msgArr = msg.split(new RegExp("\\s+"));
@@ -32,10 +32,10 @@ const parse = (msg: string, emotes: Record<string, Emote>) => {
   return parsedMsg;
 };
 
-function Message({ message }: MessageProps) {
+function Message(props: MessageProps) {
   const emotes = useAppSelector((state) => state.log.emotes);
 
-  return <span>{parse(message, emotes)}</span>;
+  return <span {...props}>{parse(props.message, emotes)}</span>;
 }
 
 export default Message;

@@ -38,8 +38,11 @@ export default function useGetLogs() {
     const fetchData = async () => {
       try {
         const tokens = getTwitchTokens();
-        if (!tokens) {
+        if (!tokens.video_id) {
           throw new Error("Go to a VOD page");
+        }
+        if (!tokens.client_id || !tokens.unique_id) {
+          throw new Error("Login to Twitch");
         }
 
         if (fetchedFor === tokens.video_id) return;
@@ -48,7 +51,7 @@ export default function useGetLogs() {
         disptach(setCurrentPage("search"));
         disptach(setIsLoading(true));
 
-        const vodInfo = await fetchVODData(tokens);
+        const vodInfo = await fetchVODData(tokens as TwitchTokens);
 
         setLoadingMessage("Fetching logs...");
         const apiLinks = await fetchAPILinks(vodInfo.channelname);
@@ -56,7 +59,7 @@ export default function useGetLogs() {
         const data = await fetchAndProcessLogs(
           apiLinks,
           vodInfo,
-          tokens,
+          tokens as TwitchTokens,
           setLoadingMessage,
           controller.signal
         );
@@ -143,7 +146,7 @@ async function fetchAndProcessLogs(
       let done = logs.data.done;
 
       while (done === false) {
-        const temp = await getChunks();
+        const temp = await getChunks(logs.data.chunkID);
         if (!temp.data) {
           throw new Error("Error fetching logs");
         }

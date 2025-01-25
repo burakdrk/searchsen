@@ -2,14 +2,18 @@ export {};
 
 import { Storage } from "@plasmohq/storage";
 
+type Chunks = {
+  data: string[];
+  index: number;
+};
+
 declare global {
   interface Window {
-    chunks: {
-      data: string[];
-      index: number;
-    };
+    chunksMap: Record<string, Chunks>;
   }
 }
+
+self.chunksMap = {};
 
 const storage = new Storage({
   area: "local"

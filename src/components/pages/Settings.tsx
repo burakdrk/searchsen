@@ -20,11 +20,15 @@ function Settings() {
     })
   });
 
+  if (emotesOn === undefined || twitchFallback === undefined) {
+    return null;
+  }
+
   return (
-    <div className="text-2xl">
+    <div className="text-2xl h-full">
       <h1 className="text-4xl font-bold">Settings</h1>
 
-      <div className="py-8 space-y-12">
+      <div className="py-8 space-y-12 flex flex-col justify-between h-[calc(100%-25px)]">
         {/* Switches Section */}
         <section>
           <div className="space-y-6">

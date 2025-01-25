@@ -1,9 +1,7 @@
-import type { TwitchTokens } from "~types";
-
 export * from "./backgroundWrapper";
 export * from "./heatmap";
 
-export function getTwitchTokens(): TwitchTokens | null {
+export function getTwitchTokens() {
   const cookie = document.cookie;
 
   const newTokens = {
@@ -21,13 +19,7 @@ export function getTwitchTokens(): TwitchTokens | null {
       undefined
   };
 
-  const { video_id, oauth, client_id, unique_id } = newTokens;
-
-  if (!video_id || !oauth || !client_id || !unique_id) {
-    return null;
-  }
-
-  return { video_id, oauth, client_id, unique_id };
+  return newTokens;
 }
 
 export function debounceFn<T extends (...args: unknown[]) => void>(

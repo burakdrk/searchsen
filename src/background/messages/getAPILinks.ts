@@ -26,7 +26,7 @@ const handler: PlasmoMessaging.MessageHandler<
 
     res.send({ data: data.channelLogs.instances });
   } catch (error) {
-    console.error(error);
+    console.log(error);
     res.send({ error: "Error reaching API" });
   }
 };
