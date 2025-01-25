@@ -56,7 +56,7 @@ const UpdatePage = () => {
         <h3 className="text-xl">
           Please report them{" "}
           <a
-            href="https://github.com/burakdrk/searchsen"
+            href="https://github.com/burakdrk/searchsen/issues/new?template=bug_report.md"
             target="_blank"
             rel="noopener noreferrer"
             className="underline"
