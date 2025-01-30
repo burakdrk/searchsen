@@ -7,8 +7,14 @@
   "scripts": {
     "dev": "plasmo dev",
     "lint": "eslint . --ext .ts,.tsx",
-    "build": "pnpm lint && plasmo build",
-    "package": "pnpm lint && plasmo package"
+    "build": "pnpm lint && plasmo build --hoist",
+    "build:firefox-mv2": "pnpm run build -- --target=firefox-mv2",
+    "build:firefox-mv3": "pnpm run build -- --target=firefox-mv3",
+    "build:chrome-mv3": "pnpm run build -- --target=chrome-mv3",
+    "package": "pnpm run build -- --zip",
+    "package:firefox-mv2": "pnpm run package -- --target=firefox-mv2",
+    "package:firefox-mv3": "pnpm run package -- --target=firefox-mv3",
+    "package:chrome-mv3": "pnpm run package -- --target=chrome-mv3"
   },
   "dependencies": {
     "@datastructures-js/priority-queue": "^6.3.2",
