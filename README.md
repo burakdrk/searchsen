@@ -1,33 +1,27 @@
-This is a [Plasmo extension](https://docs.plasmo.com/) project bootstrapped with [`plasmo init`](https://www.npmjs.com/package/plasmo).
+<div align="center">
 
-## Getting Started
+<img src="https://raw.githubusercontent.com/burakdrk/searchsen/refs/heads/main/assets/icon.png" height="100px"></img>
 
-First, run the development server:
+![](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black)
+![](https://img.shields.io/badge/Typescript-3178C6?style=flat-square&logo=typescript&logoColor=white)
 
-```bash
-pnpm dev
-# or
-npm run dev
-```
+</div>
 
-Open your browser and load the appropriate development build. For example, if you are developing for the chrome browser, using manifest v3, use: `build/chrome-mv3-dev`.
+# Searchsen
 
-You can start editing the popup by modifying `popup.tsx`. It should auto-update as you make changes. To add an options page, simply add a `options.tsx` file to the root of the project, with a react component default exported. Likewise to add a content page, add a `content.ts` file to the root of the project, importing some module and do some logic, then reload the extension on your browser.
+An extension created with Plasmo framework that allows you to search and analyze the chat of Twitch VODs.
 
-For further guidance, [visit our Documentation](https://docs.plasmo.com/)
+## Building
 
-## Making production build
+1. `pnpm i` to install dependencies
+2. `pnpm build:chrome-mv3` or`pnpm build:firefox-mv2` to generate a production build in the `build` folder
 
-Run the following:
+## Where to get
 
-```bash
-pnpm build
-# or
-npm run build
-```
+- You can build from source
+- You can get it at the Google Chrome Webstore https://chrome.google.com/webstore/detail/searchsen/jncopnckeaddkmiajjmpoglomkhcdfkn
+- You can get the unpacked version from releases and load it on your browser
 
-This should create a production bundle for your extension, ready to be zipped and published to the stores.
+## Donate
 
-## Submit to the webstores
-
-The easiest way to deploy your Plasmo extension is to use the built-in [bpp](https://bpp.browser.market) GitHub action. Prior to using this action however, make sure to build your extension and upload the first version to the store to establish the basic credentials. Then, simply follow [this setup instruction](https://docs.plasmo.com/framework/workflows/submit) and you should be on your way for automated submission!
+XMR (Monero): 8BGPHwwsQHFPyWCYrwXHsxWtCpVXLFfUnMgNCc9dQFnZ22utKoSRnUMEPtUamqCFH96sTbfRPnEdj18kbRbLymZSCRqSMgT
