@@ -13,6 +13,10 @@ declare global {
   }
 }
 
+interface IDetails extends chrome.webRequest.WebRequestHeadersDetails {
+  originUrl?: string;
+}
+
 self.chunksMap = {};
 
 const storage = new Storage({
@@ -26,9 +30,12 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
 });
 
 chrome.webRequest.onBeforeSendHeaders.addListener(
-  (details) => {
+  (details: IDetails) => {
     (async () => {
-      if (details.initiator?.toLowerCase().startsWith("chrome-extension")) {
+      if (
+        details.initiator?.toLowerCase().startsWith("chrome-extension") ||
+        details.originUrl?.toLowerCase().startsWith("moz-extension")
+      ) {
         return;
       }
 
@@ -53,12 +60,12 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
       console.log("Token is set");
     })();
   },
-  { urls: ["https://gql.twitch.tv/gql"] },
+  { urls: ["https://gql.twitch.tv/gql*"] },
   ["requestHeaders"]
 );
 
-chrome.runtime.onInstalled.addListener((details) => {
-  if (details.reason === "update") {
-    chrome.tabs.create({ url: chrome.runtime.getURL("tabs/updated.html") });
-  }
-});
+// chrome.runtime.onInstalled.addListener((details) => {
+//   if (details.reason === "update") {
+//     chrome.tabs.create({ url: chrome.runtime.getURL("tabs/updated.html") });
+//   }
+// });
