@@ -9,7 +9,7 @@
 
 # Searchsen
 
-An extension created with Plasmo framework that allows you to search and analyze the chat of Twitch VODs.
+A browser extension created with Plasmo framework that allows you to search and analyze the chat of Twitch VODs.
 
 ## Building
 
@@ -19,7 +19,7 @@ An extension created with Plasmo framework that allows you to search and analyze
 ## Where to get
 
 - You can build from source
-- You can get it at the Google Chrome Webstore https://chrome.google.com/webstore/detail/searchsen/jncopnckeaddkmiajjmpoglomkhcdfkn
+- You can get it on [Chrome Webstore](https://chrome.google.com/webstore/detail/searchsen/jncopnckeaddkmiajjmpoglomkhcdfkn) or [Mozilla Add-ons](https://addons.mozilla.org/firefox/addon/searchsen/)
 - You can get the unpacked version from releases and load it on your browser
 
 ## Donate
