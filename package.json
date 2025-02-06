@@ -1,13 +1,13 @@
 {
   "name": "searchsen",
   "displayName": "Searchsen - Twitch VOD Chat Search Tool",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Browser extension to search and analyze the chat logs of Twitch VODs",
   "author": "Burak Duruk",
   "scripts": {
     "dev": "plasmo dev",
     "lint": "eslint . --ext .ts,.tsx",
-    "build": "pnpm lint && plasmo build --hoist",
+    "build": "pnpm lint && plasmo build",
     "build:firefox-mv2": "pnpm run build -- --target=firefox-mv2",
     "build:firefox-mv3": "pnpm run build -- --target=firefox-mv3",
     "build:chrome-mv3": "pnpm run build -- --target=chrome-mv3",

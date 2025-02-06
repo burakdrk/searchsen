@@ -23,6 +23,8 @@ function Settings() {
     return null;
   }
 
+  const manifest = chrome.runtime.getManifest();
+
   return (
     <div className="text-2xl h-full">
       <h1 className="text-4xl font-bold">Settings</h1>
@@ -69,7 +71,9 @@ function Settings() {
             <img src={logo} alt="Logo" className="w-24 h-24" />
             <div>
               <h3 className="text-xl font-semibold">Searchsen</h3>
-              <p className="text-gray-600 dark:text-gray-400">4.0.0</p>
+              <p className="text-gray-600 dark:text-gray-400">
+                {manifest.version}
+              </p>
             </div>
             <div className="flex gap-4">
               <a
