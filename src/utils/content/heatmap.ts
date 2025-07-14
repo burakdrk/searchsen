@@ -1,5 +1,5 @@
-/* eslint-disable import/namespace */
-import * as d3 from "d3";
+import { area, curveBasis } from "d3-shape";
+import { scaleLinear } from "d3-scale";
 import type { Logs } from "~types";
 
 const calculateOptimalBinCount = (width: number) => {
@@ -51,27 +51,25 @@ export function drawHeatmap(
     maxCount > 0 ? count / maxCount : 0
   );
 
-  const xScale = d3
-    .scaleLinear()
+  const xScale = scaleLinear()
     .domain([0, binCount - 1])
     .range([0, width]);
 
-  const yScale = d3.scaleLinear().domain([0, 1]).range([height, 0]);
+  const yScale = scaleLinear().domain([0, 1]).range([height, 0]);
 
-  const areaGenerator = d3
-    .area<number>()
+  const areaGenerator = area<number>()
     .x((_, i) => xScale(i))
     .y0(height) // Add baseline at bottom
     .y1((d) => yScale(d)) // Rename y to y1 for top line
-    .curve(d3.curveBasis);
+    .curve(curveBasis);
 
   const pathData = areaGenerator(normalizedBins) || "";
 
   const element = document.createElement("div");
 
   element.style.position = "absolute";
-  element.style.top = "0";
-  element.style.padding = "0 2rem";
+  element.style.top = "-2px";
+  element.style.paddingInline = "16px";
   element.id = "searchsen-heatmap";
 
   element.innerHTML = `

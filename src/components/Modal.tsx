@@ -59,12 +59,12 @@ function Modal({ onClose }: ModalProps) {
       >
         <div
           id="searchsen-root"
-          className={`flex h-full w-full flex-col rounded-md border border-default-border shadow-lg
+          className={`flex h-full w-full flex-col rounded-lg border border-default-border shadow-lg
             ${isTransparent ? "opacity-50" : ""}`}
         >
           <header
             className={`searchsen-drag-handle flex cursor-move items-center justify-between border-b
-              rounded-t-md border-default-border bg-dark px-4 py-2 bg-opacity-90`}
+              rounded-t-lg border-default-border bg-dark px-4 py-2 bg-opacity-90`}
           >
             <Logo />
 
@@ -85,7 +85,7 @@ function Modal({ onClose }: ModalProps) {
 
           <Toaster />
 
-          <div className={"flex flex-1 overflow-y-auto rounded-b-md bg-black"}>
+          <div className={"flex flex-1 overflow-y-auto rounded-b-lg bg-black"}>
             <Sidebar />
             <Content />
           </div>

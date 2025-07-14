@@ -44,9 +44,11 @@ function SearchInput({ ...props }: SearchInputProps) {
     <div className="relative w-full z-10">
       <input
         className="border-2 border-solid bg-transparent border-default-border text-text-default
-          active:border-accent focus:border-accent focus:outline-none rounded-lg px-4 py-2
-          w-full text-2xl pr-12"
+          active:border-accent focus:border-accent focus:outline-none focus:border-4
+          rounded-xl px-4 py-2 w-full text-2xl pr-12 hover:border-hover-border"
         type="search"
+        aria-label="Searchsen search input"
+        id="searchsen-input"
         placeholder={
           !searchOptions.isUsernameSearch
             ? `Enter ${searchOptions.searchMode} to search`
@@ -64,7 +66,7 @@ function SearchInput({ ...props }: SearchInputProps) {
 
         <div
           ref={dropdownRef}
-          className={`absolute top-12 right-0 w-64 bg-dark rounded-md border border-default-border
+          className={`absolute top-12 right-0 w-64 bg-dark rounded-lg border border-default-border
             ${dropdownOpen ? "block" : "hidden"} text-xl`}
         >
           <button

@@ -11,9 +11,11 @@ function StartButton() {
 
     const handleChange = () => {
       const isHidden = element.getAttribute("aria-hidden") === "true";
+      const header = document.querySelector(".video-chat__header");
+
       if (isHidden) {
         setIsChatOpen(false);
-      } else {
+      } else if (header) {
         setIsChatOpen(true);
       }
     };
@@ -56,7 +58,10 @@ function StartButton() {
   return (
     <>
       {isChatOpen && (
-        <div className="w-12 h-12 flex items-center justify-center hover:bg-hover-bg rounded-md z-10">
+        <div
+          className="w-[32px] h-[32px] flex items-center justify-center hover:bg-hover-bg
+            rounded-full z-10"
+        >
           <Tooltip content="Searchsen" position="left">
             <button
               onClick={() => {
