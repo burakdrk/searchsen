@@ -24,4 +24,7 @@ A browser extension created with Plasmo framework that allows you to search and 
 
 ## Donate
 
+Ko-fi:
+https://ko-fi.com/burakdrk
+
 XMR (Monero): 8BGPHwwsQHFPyWCYrwXHsxWtCpVXLFfUnMgNCc9dQFnZ22utKoSRnUMEPtUamqCFH96sTbfRPnEdj18kbRbLymZSCRqSMgT

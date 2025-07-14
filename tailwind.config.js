@@ -11,7 +11,8 @@ module.exports = {
         "accent": "#a970ff",
         "dark": "#1f1f23",
         "darker": "#18181b",
-        "default-border": "#434343"
+        "default-border": "#434343",
+        "hover-border": "rgba(222, 222, 227, 0.4)",
       },
     },
   },
